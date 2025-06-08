@@ -51,7 +51,6 @@ function polygon(
     ctx: CanvasRenderingContext2D,
     r: number, s: number, rr: number, ro: number
 ) {
-    console.log(r, s, rr, ro);
     let a = 2 * Math.PI / s;
 
     ctx.rotate(rr * (1 - 2 * Math.random()) * Math.PI + a / 2 + ro);

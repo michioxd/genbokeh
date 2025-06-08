@@ -5,12 +5,34 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="color-scheme" content="dark">
-  <title>genbokeh by michioxd</title>
+  <title>genbokeh - Generate Bokeh Wallpaper Online</title>
+  <meta name="title" content="genbokeh - Generate Bokeh Wallpaper Online" />
+  <meta name="description" content="Generate Bokeh Wallpaper Online with dat.GUI" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="genbokeh - Generate Bokeh Wallpaper Online" />
+  <meta property="og:description" content="Generate Bokeh Wallpaper Online with dat.GUI" />
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="https://metatags.io/" />
+  <meta property="twitter:title" content="genbokeh - Generate Bokeh Wallpaper Online" />
+  <meta property="twitter:description" content="Generate Bokeh Wallpaper Online with dat.GUI" />
 </head>
 
 <body>
   <div id="app">
-    <img id="main_img" class="img">
+    <img id="main_img" class="img" src="./public/empty.png">
+    <div id="loading">
+      <div class="rtSpinner">
+        <div class="rtSpinnerLeaf"></div>
+        <div class="rtSpinnerLeaf"></div>
+        <div class="rtSpinnerLeaf"></div>
+        <div class="rtSpinnerLeaf"></div>
+        <div class="rtSpinnerLeaf"></div>
+        <div class="rtSpinnerLeaf"></div>
+        <div class="rtSpinnerLeaf"></div>
+        <div class="rtSpinnerLeaf"></div>
+      </div>
+      <div class="loading-text">Generating bokeh...</div>
+    </div>
   </div>
   <script type="module" src="/src/main.ts"></script>
 </body>

@@ -9,10 +9,11 @@ import './style.scss';
 import * as dat from 'dat.gui';
 import { bokeh } from './particles'
 import type { ShapeType } from './types';
+import bokehWorker from './worker?worker&inline';
 
 const initialSettings = {
-    width: 1920,
-    height: 1080,
+    width: 1280,
+    height: 720,
     shape: 0,
     vertices: 4,
     maxradius: 96,
@@ -151,11 +152,67 @@ const main = function () {
     gui.add(gh, "saveImg").name("💾Save Image");
     gui.add(gh, "reset").name("🔄Reset Settings");
 
+    let worker: Worker | null = null;
+    let isWorkerSupported = typeof Worker !== 'undefined' && typeof OffscreenCanvas !== 'undefined';
+    let isLoading = false;
+
+    function showLoading() {
+        isLoading = true;
+        const loadingDiv = document.getElementById('loading');
+        if (loadingDiv) {
+            loadingDiv.style.display = 'flex';
+        }
+    }
+
+    function hideLoading() {
+        isLoading = false;
+        const loadingDiv = document.getElementById('loading');
+        if (loadingDiv) {
+            loadingDiv.style.display = 'none';
+        }
+    }
+
+    function initWorker() {
+        if (isWorkerSupported && !worker) {
+            try {
+                worker = new bokehWorker();
+                worker.onmessage = (e) => {
+                    const { imageData } = e.data;
+                    if (cv) cv.remove();
+                    cv = document.createElement("canvas") as HTMLCanvasElement;
+                    cv.width = settings.width;
+                    cv.height = settings.height;
+                    const ctx = cv.getContext("2d");
+                    if (!ctx) return;
+                    ctx.putImageData(imageData, 0, 0);
+                    img.src = cv.toDataURL.apply(cv, [settings.imagetype, 1]);
+                    hideLoading();
+                };
+            } catch (e) {
+                console.warn('Web Worker initialization failed, falling back to main thread', e);
+                isWorkerSupported = false;
+            }
+        }
+    }
+
     function genBokeh() {
+        if (isLoading) return;
         localStorage.setItem("settings", JSON.stringify(settings));
         if (settings.randomhue_range_start > settings.randomhue_range_end) {
             console.error("Random hue range start is greater than random hue range end");
             return;
+        }
+
+        if (isWorkerSupported) {
+            if (!worker) {
+                initWorker();
+            }
+            if (worker) {
+                console.log("Worker supported, posting message");
+                showLoading();
+                worker.postMessage(settings);
+                return;
+            }
         }
 
         if (cv) cv.remove();
@@ -206,6 +263,7 @@ const main = function () {
         cv.height = settings.height;
         ctx.putImageData(imgData, 0, 0);
         img.src = cv.toDataURL.apply(cv, [settings.imagetype, 1]);
+        hideLoading();
     }
 
     genBokeh();
