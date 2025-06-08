@@ -19,11 +19,6 @@ interface WorkerSettings {
     saturation: number;
     lightness: number;
     alpha: number;
-    bg_enabled: boolean;
-    bg_hue: number;
-    bg_saturation: number;
-    bg_lightness: number;
-    bg_alpha: number;
 }
 
 const bokehWithOffscreen = (
@@ -77,13 +72,6 @@ self.onmessage = (e: MessageEvent) => {
             settings.blur,
             [settings.randomhue_range_start, settings.randomhue_range_end]
         );
-    }
-
-    if (settings.bg_enabled) {
-        ctx.globalCompositeOperation = 'destination-over';
-        const backgroundHSLA = [settings.bg_hue, settings.bg_saturation + "%", settings.bg_lightness + "%", settings.bg_alpha];
-        ctx.fillStyle = "hsla(" + backgroundHSLA.join(',') + ");";
-        ctx.fillRect(0, -settings.height * 2, canvas.width, canvas.height);
     }
 
     // Transfer the image data back to the main thread

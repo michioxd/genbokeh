@@ -127,3 +127,15 @@ body {
         opacity: 0.25;
     }
 }
+
+.dg {
+    .dg li.title {
+        background: rgba(0, 0, 0, 0.6) !important;
+    }
+
+    li:not(.folder) {
+        background: rgba(26, 26, 26, 0.6) !important;
+        border-bottom: 1px solid rgba(44, 44, 44, 0.6) !important;
+        backdrop-filter: blur(10px);
+    }
+}

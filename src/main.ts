@@ -31,12 +31,6 @@ const initialSettings = {
     alpha: 0.8,
     imagetype: 'image/png',
 
-    bg_enabled: false,
-    bg_hue: 0,
-    bg_saturation: 100,
-    bg_lightness: 50,
-    bg_alpha: 0.8,
-
     autoupdate: true,
 };
 
@@ -88,7 +82,6 @@ const main = function () {
     const bokehProperties = gui.addFolder("✨Bokeh");
     const particleProperties = bokehProperties.addFolder("🌟Particle");
     const colorProperties = bokehProperties.addFolder("🎨Color");
-    const backgroundProperties = gui.addFolder("🖼️Background");
 
     const controllers = [
         sizeProperties.add(settings, "width", 0).step(1).name("Width"),
@@ -123,13 +116,7 @@ const main = function () {
         colorProperties.add(settings, "hue", 0, 360).step(1).name("Hue"),
         colorProperties.add(settings, "saturation", 0, 100).step(1).name("Saturation"),
         colorProperties.add(settings, "lightness", 0, 100).step(1).name("Lightness"),
-        colorProperties.add(settings, "alpha", 0, 1).step(0.01).name("Alpha"),
-
-        backgroundProperties.add(settings, "bg_enabled").name("Enabled"),
-        backgroundProperties.add(settings, "bg_hue", 0, 360).step(1).name("Hue"),
-        backgroundProperties.add(settings, "bg_saturation", 0, 100).step(1).name("Saturation"),
-        backgroundProperties.add(settings, "bg_lightness", 0, 100).step(1).name("Lightness"),
-        backgroundProperties.add(settings, "bg_alpha", 0, 1).step(0.01).name("Alpha")
+        colorProperties.add(settings, "alpha", 0, 1).step(0.01).name("Alpha")
     ];
 
     controllers.forEach(controller => {
@@ -250,13 +237,6 @@ const main = function () {
                 settings.blur,
                 [settings.randomhue_range_start, settings.randomhue_range_end]
             );
-        }
-
-        if (settings.bg_enabled) {
-            ctx.globalCompositeOperation = 'destination-over';
-            var backgroundHSLA = [settings.bg_hue, settings.bg_saturation + "%", settings.bg_lightness + "%", settings.bg_alpha];
-            ctx.fillStyle = "hsla(" + backgroundHSLA.join(',') + ");";
-            ctx.fillRect(0, -settings.height * 2, cv.width, cv.height);
         }
 
         var imgData = ctx.getImageData(0, 0, settings.width, settings.height);
