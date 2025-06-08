@@ -1,0 +1,21 @@
+{
+  "name": "genbokeh",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "sass": "^1.89.1",
+    "typescript": "~5.8.3",
+    "vite": "^6.3.5"
+  },
+  "dependencies": {
+    "@fontsource/inter": "^5.2.6",
+    "@types/dat.gui": "^0.7.13",
+    "dat.gui": "^0.7.9"
+  }
+}
