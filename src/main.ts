@@ -10,6 +10,7 @@ import * as dat from 'dat.gui';
 import { bokeh } from './particles'
 import type { ShapeType } from './types';
 import bokehWorker from './worker?worker&inline';
+import { formatTime } from './utils'
 
 const initialSettings = {
     width: 1280,
@@ -35,7 +36,11 @@ const initialSettings = {
 };
 
 const main = function () {
-    let settings = initialSettings, img = document.getElementById("main_img") as HTMLImageElement, cv = document.createElement("canvas") as HTMLCanvasElement;
+    let settings = initialSettings,
+        img = document.getElementById("main_img") as HTMLImageElement,
+        cv = document.createElement("canvas") as HTMLCanvasElement,
+        startTime = 0,
+        endTime = 0;
 
     const gh = {
         github: () => {
@@ -135,9 +140,10 @@ const main = function () {
     });
 
     gui.add(settings, "autoupdate").name("🔄Auto Update");
-    gui.add(gh, "generate").name("⚙️Generate");
+    const generating = gui.add(gh, "generate").name("⚙️Generate");
     gui.add(gh, "saveImg").name("💾Save Image");
     gui.add(gh, "reset").name("🔄Reset Settings");
+    const stats = gui.addFolder("⏱️Took: 0ms");
 
     let worker: Worker | null = null;
     let isWorkerSupported = typeof Worker !== 'undefined' && typeof OffscreenCanvas !== 'undefined';
@@ -145,6 +151,7 @@ const main = function () {
 
     function showLoading() {
         isLoading = true;
+        generating.name("🔄Generating...");
         const loadingDiv = document.getElementById('loading');
         if (loadingDiv) {
             loadingDiv.style.display = 'flex';
@@ -153,6 +160,8 @@ const main = function () {
 
     function hideLoading() {
         isLoading = false;
+        generating.name("⚙️Generate");
+        stats.name = `⏱️Took: ${formatTime(endTime - startTime)}`;
         const loadingDiv = document.getElementById('loading');
         if (loadingDiv) {
             loadingDiv.style.display = 'none';
@@ -173,6 +182,7 @@ const main = function () {
                     if (!ctx) return;
                     ctx.putImageData(imageData, 0, 0);
                     img.src = cv.toDataURL.apply(cv, [settings.imagetype, 1]);
+                    endTime = performance.now();
                     hideLoading();
                 };
             } catch (e) {
@@ -189,6 +199,8 @@ const main = function () {
             console.error("Random hue range start is greater than random hue range end");
             return;
         }
+
+        startTime = performance.now();
 
         if (isWorkerSupported) {
             if (!worker) {

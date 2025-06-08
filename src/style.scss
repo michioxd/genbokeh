@@ -130,12 +130,20 @@ body {
 
 .dg {
     .dg li.title {
-        background: rgba(0, 0, 0, 0.6) !important;
+        background: rgba(27, 27, 27, 0.6) !important;
     }
 
     li:not(.folder) {
-        background: rgba(26, 26, 26, 0.6) !important;
-        border-bottom: 1px solid rgba(44, 44, 44, 0.6) !important;
+        background: rgba(0, 0, 0, 0.6) !important;
+        border-bottom: 1px solid rgba(14, 14, 14, 0.3) !important;
         backdrop-filter: blur(10px);
+    }
+
+    .c {
+
+        .slider,
+        input[type=text] {
+            background-color: rgba(19, 19, 19, 0.6) !important;
+        }
     }
 }
